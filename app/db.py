@@ -2,8 +2,9 @@ import asyncio
 import sys
 from itertools import islice
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.sql import text
 
 from app.config import settings
 
@@ -23,6 +24,8 @@ async_engine = create_async_engine(
     pool_size=pool_size,
     max_overflow=max_overflow,
 )
+
+metadata = MetaData()
 
 
 def _get_db_version():
