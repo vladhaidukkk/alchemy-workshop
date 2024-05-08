@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "alchemy-workshop"
+version = "0.0.1"
+dependencies = ["sqlalchemy", "psycopg[binary]", "asyncpg"]
+
+[project.optional-dependencies]
+dev = ["isort", "black"]
+
+[tool.isort]
+profile = "black"
+
+[tool.black]
+line-length = 88
