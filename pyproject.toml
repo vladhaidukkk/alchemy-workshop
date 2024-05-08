@@ -5,7 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "alchemy-workshop"
 version = "0.0.1"
-dependencies = ["sqlalchemy", "psycopg[binary]", "asyncpg"]
+dependencies = [
+    "sqlalchemy",
+    "psycopg[binary]",
+    "asyncpg",
+    "greenlet",
+    "pydantic",
+    "pydantic-settings",
+]
 
 [project.optional-dependencies]
 dev = ["isort", "black"]
