@@ -5,9 +5,15 @@ annotated-types==0.6.0
 asyncpg==0.29.0
 black==24.4.2
 click==8.1.7
-    # via black
+    # via
+    #   black
+    #   typer
 greenlet==3.0.3
 isort==5.13.2
+markdown-it-py==3.0.0
+    # via rich
+mdurl==0.1.2
+    # via markdown-it-py
 mypy-extensions==1.0.0
     # via black
 packaging==24.0
@@ -24,12 +30,20 @@ pydantic==2.7.1
 pydantic-core==2.18.2
     # via pydantic
 pydantic-settings==2.2.1
+pygments==2.18.0
+    # via rich
 python-dotenv==1.0.1
     # via pydantic-settings
+rich==13.7.1
+    # via typer
+shellingham==1.5.4
+    # via typer
 sqlalchemy==2.0.30
+typer==0.12.3
 typing-extensions==4.11.0
     # via
     #   psycopg
     #   pydantic
     #   pydantic-core
     #   sqlalchemy
+    #   typer
