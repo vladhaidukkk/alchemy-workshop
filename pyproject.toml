@@ -18,6 +18,13 @@ dependencies = [
 [project.optional-dependencies]
 dev = ["isort", "black"]
 
+[project.scripts]
+# database manager -> dbm
+dbm = "app.main:main"
+
+[tool.setuptools]
+packages = ["app", "data"]
+
 [tool.isort]
 profile = "black"
 
