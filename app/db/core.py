@@ -11,13 +11,13 @@ pool_size = 5  # default
 max_overflow = 10  # default
 
 sync_engine = create_engine(
-    url=settings.sync_db_url,
+    url=settings.sync_db_url,  # type: ignore
     echo=echo,
     pool_size=pool_size,
     max_overflow=max_overflow,
 )
 async_engine = create_async_engine(
-    url=settings.async_db_url,
+    url=settings.async_db_url,  # type: ignore
     echo=echo,
     pool_size=pool_size,
     max_overflow=max_overflow,
@@ -30,7 +30,8 @@ metadata = MetaData()
 
 
 class ModelBase(DeclarativeBase):
-    # Define mappings from Python types to SQLAlchemy types, e.g. Mapped[datetime] -> DateTime(timezone=True)
+    # Define mappings from Python types to SQLAlchemy types,
+    # e.g. Mapped[datetime] -> DateTime(timezone=True)
     type_annotation_map = {
         datetime: DateTime(timezone=True),
     }

@@ -4,11 +4,11 @@ from app.common import ExecutionMode
 from app.db.core import ModelBase, metadata, sync_engine
 
 # isort: split
-import app.tables.users  # noqa
+from app.tables.users import users_table  # noqa
 
 # isort: split
-import app.models.order  # noqa
-import app.models.user  # noqa
+from app.models.order import OrderModel  # noqa
+from app.models.user import UserModel  # noqa
 
 app = Typer()
 

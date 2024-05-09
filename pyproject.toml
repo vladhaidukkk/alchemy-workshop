@@ -16,7 +16,16 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["isort", "black"]
+dev = [
+    "isort",
+    "black",
+    "docformatter",
+    "pyright",
+    "flake8",
+    "flake8-pyproject",
+    "autoflake",
+    "bandit",
+]
 
 [project.scripts]
 # database manager -> dbm
@@ -30,3 +39,19 @@ profile = "black"
 
 [tool.black]
 line-length = 88
+
+[tool.docformatter]
+in-place = true
+recursive = true
+black = true
+blank = true
+
+[tool.flake8]
+max-line-length = 88
+max-complexity = 8
+ignore = ["E203", "F401", "E701"]
+
+[tool.autoflake]
+recursive = true
+remove-all-unused-imports = true
+ignore-init-module-imports = true
