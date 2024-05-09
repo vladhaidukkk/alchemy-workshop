@@ -1,6 +1,7 @@
 from app.db import ModelBase, sync_engine
 
 # isort: split
+from app.models.order import OrderModel  # noqa
 from app.models.user import UserModel  # noqa
 
 
