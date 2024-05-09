@@ -1,12 +1,8 @@
-import asyncio
-import sys
 from datetime import datetime
-from itertools import islice
 
 from sqlalchemy import DateTime, MetaData, create_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
-from sqlalchemy.sql import text
 
 from app.config import settings
 
@@ -38,25 +34,3 @@ class ModelBase(DeclarativeBase):
     type_annotation_map = {
         datetime: DateTime(timezone=True),
     }
-
-
-def _get_db_version():
-    with sync_engine.connect() as conn:
-        query = text("SELECT VERSION()")
-        result = conn.execute(query)
-        return result.scalar()
-
-
-async def _get_db_version_async():
-    async with async_engine.connect() as conn:
-        query = text("SELECT VERSION()")
-        result = await conn.execute(query)
-        return result.scalar()
-
-
-if __name__ == "__main__":
-    mode = next(islice(sys.argv, 1, None), "sync").lower()
-    version = (
-        _get_db_version() if mode == "sync" else asyncio.run(_get_db_version_async())
-    )
-    print(version)
