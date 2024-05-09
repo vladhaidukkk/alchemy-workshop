@@ -4,7 +4,10 @@ from typing import Annotated
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.sql import func
 
-intpk = Annotated[int, mapped_column(primary_key=True)]
+intpk = Annotated[
+    int,
+    mapped_column(primary_key=True),
+]
 
 created_at = Annotated[
     datetime,

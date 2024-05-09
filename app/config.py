@@ -1,3 +1,5 @@
+from typing import Literal
+
 from pydantic import Field, PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -8,6 +10,10 @@ class Settings(BaseSettings):
     db_user: str
     db_pass: str
     db_name: str
+
+    echo: bool | Literal["debug"] = False
+    pool_size: int = 5
+    max_overflow: int = 10
 
     @computed_field
     def sync_db_url(self) -> str:

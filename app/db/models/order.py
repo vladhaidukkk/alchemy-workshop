@@ -3,8 +3,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.csv_loader import csv_loader
 from app.db.core import ModelBase, sync_session
+from app.db.enums import OrderStatus
 from app.db.types import created_at, intpk
-from app.enums import OrderStatus
 
 
 class OrderModel(ModelBase):
@@ -19,7 +19,7 @@ class OrderModel(ModelBase):
 
 def _insert_mock_orders():
     # 'users' table has to be registered in the metadata to have a relationship
-    import app.models.user  # noqa
+    import app.db.models.user  # noqa
 
     with sync_session.begin() as session:
         mock_orders = csv_loader.load("orders")

@@ -6,21 +6,17 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 
 from app.config import settings
 
-echo = True
-pool_size = 5  # default
-max_overflow = 10  # default
-
 sync_engine = create_engine(
     url=settings.sync_db_url,  # type: ignore
-    echo=echo,
-    pool_size=pool_size,
-    max_overflow=max_overflow,
+    echo=settings.echo,
+    pool_size=settings.pool_size,
+    max_overflow=settings.max_overflow,
 )
 async_engine = create_async_engine(
     url=settings.async_db_url,  # type: ignore
-    echo=echo,
-    pool_size=pool_size,
-    max_overflow=max_overflow,
+    echo=settings.echo,
+    pool_size=settings.pool_size,
+    max_overflow=settings.max_overflow,
 )
 
 sync_session = sessionmaker(sync_engine)
