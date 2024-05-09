@@ -1,0 +1,4 @@
+email,hashed_password,first_name,last_name
+john.doe@example.com,hashed_password1,John,Doe
+jane.smith@example.com,hashed_password2,Jane,Smith
+alice.johnson@example.com,hashed_password3,Alice,Johnson

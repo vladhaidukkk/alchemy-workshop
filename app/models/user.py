@@ -4,6 +4,7 @@ from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func, insert
 
+from app.csv_loader import csv_loader
 from app.db import ModelBase, sync_engine
 
 
@@ -22,28 +23,8 @@ class UserModel(ModelBase):
 
 def _insert_mock_users():
     with sync_engine.begin() as conn:
-        stmt = insert(UserModel).values(
-            [
-                {
-                    "email": "john.doe@example.com",
-                    "hashed_password": "hashed_password1",
-                    "first_name": "John",
-                    "last_name": "Doe",
-                },
-                {
-                    "email": "jane.smith@example.com",
-                    "hashed_password": "hashed_password2",
-                    "first_name": "Jane",
-                    "last_name": "Smith",
-                },
-                {
-                    "email": "alice.johnson@example.com",
-                    "hashed_password": "hashed_password3",
-                    "first_name": "Alice",
-                    "last_name": "Johnson",
-                },
-            ]
-        )
+        mock_users = csv_loader.load("users")
+        stmt = insert(UserModel).values(mock_users)
         conn.execute(stmt)
 
 
