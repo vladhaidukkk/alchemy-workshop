@@ -1,24 +1,20 @@
-from datetime import datetime
-
-from sqlalchemy import DateTime, ForeignKey
+from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.sql import func
 
 from app.csv_loader import csv_loader
-from app.db import ModelBase, sync_session
+from app.db.core import ModelBase, sync_session
+from app.db.types import intpk, created_at
 from app.enums import OrderStatus
 
 
 class OrderModel(ModelBase):
     __tablename__ = "orders"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[intpk]
     # 'CASCADE' - delete all related orders after a user deletion
     user_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"))
     status: Mapped[OrderStatus]
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[created_at]
 
 
 def _insert_mock_orders():

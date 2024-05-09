@@ -1,4 +1,4 @@
-from app.db import metadata, sync_engine
+from app.db.core import metadata, sync_engine
 
 # isort: split
 from app.tables.users import users_table  # noqa

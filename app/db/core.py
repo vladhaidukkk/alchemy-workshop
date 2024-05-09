@@ -1,8 +1,9 @@
 import asyncio
 import sys
+from datetime import datetime
 from itertools import islice
 
-from sqlalchemy import MetaData, create_engine
+from sqlalchemy import DateTime, MetaData, create_engine
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from sqlalchemy.sql import text
@@ -33,7 +34,10 @@ metadata = MetaData()
 
 
 class ModelBase(DeclarativeBase):
-    pass
+    # Define mappings from Python types to SQLAlchemy types, e.g. Mapped[datetime] -> DateTime(timezone=True)
+    type_annotation_map = {
+        datetime: DateTime(timezone=True),
+    }
 
 
 def _get_db_version():

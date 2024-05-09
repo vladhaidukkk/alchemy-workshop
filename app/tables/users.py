@@ -2,7 +2,7 @@ from sqlalchemy import Column, DateTime, Integer, String, Table
 from sqlalchemy.sql import func, insert
 
 from app.csv_loader import csv_loader
-from app.db import metadata, sync_engine
+from app.db.core import metadata, sync_engine
 
 users_table = Table(
     "users",

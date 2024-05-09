@@ -1,24 +1,19 @@
-from datetime import datetime
-
-from sqlalchemy import DateTime
 from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.sql import func, insert
 
 from app.csv_loader import csv_loader
-from app.db import ModelBase, sync_engine, sync_session
+from app.db.core import ModelBase, sync_session
+from app.db.types import intpk, created_at
 
 
 class UserModel(ModelBase):
     __tablename__ = "users"
 
-    id: Mapped[int] = mapped_column(primary_key=True)
+    id: Mapped[intpk]
     email: Mapped[str] = mapped_column(unique=True)
     hashed_password: Mapped[str]
     first_name: Mapped[str]
     last_name: Mapped[str]
-    created_at: Mapped[datetime] = mapped_column(
-        DateTime(timezone=True), server_default=func.now()
-    )
+    created_at: Mapped[created_at]
 
 
 def _insert_mock_users():
