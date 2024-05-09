@@ -4,6 +4,7 @@ from itertools import islice
 
 from sqlalchemy import MetaData, create_engine
 from sqlalchemy.ext.asyncio import create_async_engine
+from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.sql import text
 
 from app.config import settings
@@ -26,6 +27,10 @@ async_engine = create_async_engine(
 )
 
 metadata = MetaData()
+
+
+class ModelBase(DeclarativeBase):
+    pass
 
 
 def _get_db_version():

@@ -1,28 +1,28 @@
-from sqlalchemy import Column, DateTime, Integer, String, Table
+from datetime import datetime
+
+from sqlalchemy import DateTime
+from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func, insert
 
-from app.db import metadata, sync_engine
+from app.db import ModelBase, sync_engine
 
-users_table = Table(
-    "users",
-    metadata,
-    Column("id", Integer, primary_key=True),
-    Column("email", String, nullable=False, unique=True),
-    Column("hashed_password", String, nullable=False),
-    Column("first_name", String, nullable=False),
-    Column("last_name", String, nullable=False),
-    Column(
-        "created_at",
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now(),
-    ),
-)
+
+class UserModel(ModelBase):
+    __tablename__ = "users"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    email: Mapped[str] = mapped_column(unique=True)
+    hashed_password: Mapped[str]
+    first_name: Mapped[str]
+    last_name: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now()
+    )
 
 
 def _insert_mock_users():
     with sync_engine.begin() as conn:
-        stmt = insert(users_table).values(
+        stmt = insert(UserModel).values(
             [
                 {
                     "email": "john.doe@example.com",
