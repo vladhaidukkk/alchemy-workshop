@@ -5,7 +5,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.sql import func, insert
 
 from app.csv_loader import csv_loader
-from app.db import ModelBase, sync_engine
+from app.db import ModelBase, sync_engine, sync_session
 
 
 class UserModel(ModelBase):
@@ -22,10 +22,10 @@ class UserModel(ModelBase):
 
 
 def _insert_mock_users():
-    with sync_engine.begin() as conn:
+    with sync_session.begin() as session:
         mock_users = csv_loader.load("users")
-        stmt = insert(UserModel).values(mock_users)
-        conn.execute(stmt)
+        users = [UserModel(**user) for user in mock_users]
+        session.add_all(users)
 
 
 if __name__ == "__main__":
