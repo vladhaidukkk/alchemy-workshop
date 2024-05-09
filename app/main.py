@@ -1,11 +1,10 @@
 from typer import Typer
 
+import app.commands.schema as schema
+
 app = Typer()
 
-
-@app.command()
-def index(name):
-    print(f"Hello, {name}!")
+app.add_typer(schema.app, name="schema")
 
 
 def main():

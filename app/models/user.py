@@ -2,7 +2,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from app.csv_loader import csv_loader
 from app.db.core import ModelBase, sync_session
-from app.db.types import intpk, created_at
+from app.db.types import created_at, intpk
 
 
 class UserModel(ModelBase):
