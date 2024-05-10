@@ -11,5 +11,5 @@ intpk = Annotated[
 
 created_at = Annotated[
     datetime,
-    mapped_column(server_default=func.now()),
+    mapped_column(server_default=func.current_timestamp()),
 ]

@@ -25,7 +25,7 @@ async_session = async_sessionmaker(async_engine)
 metadata = MetaData()
 
 
-class ModelBase(DeclarativeBase):
+class Base(DeclarativeBase):
     # Define mappings from Python types to SQLAlchemy types,
     # e.g. Mapped[datetime] -> DateTime(timezone=True)
     type_annotation_map = {

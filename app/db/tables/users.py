@@ -1,8 +1,7 @@
 from sqlalchemy import Column, DateTime, Integer, String, Table
-from sqlalchemy.sql import func, insert
+from sqlalchemy.sql import func
 
-from app.csv_loader import csv_loader
-from app.db.core import metadata, sync_engine
+from app.db.core import metadata
 
 users_table = Table(
     "users",
@@ -10,23 +9,13 @@ users_table = Table(
     Column("id", Integer, primary_key=True),
     Column("email", String, nullable=False, unique=True),
     Column("hashed_password", String, nullable=False),
-    Column("first_name", String, nullable=False),
-    Column("last_name", String, nullable=False),
+    Column("username", String, nullable=False, unique=True),
+    Column("first_name", String),
+    Column("last_name", String),
     Column(
         "created_at",
         DateTime(timezone=True),
         nullable=False,
-        server_default=func.now(),
+        server_default=func.current_timestamp(),
     ),
 )
-
-
-def _insert_mock_users():
-    with sync_engine.begin() as conn:
-        mock_users = csv_loader.load("users")
-        stmt = insert(users_table).values(mock_users)
-        conn.execute(stmt)
-
-
-if __name__ == "__main__":
-    _insert_mock_users()

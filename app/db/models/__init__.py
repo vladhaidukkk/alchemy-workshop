@@ -1,2 +1,1 @@
-from .order import OrderModel
-from .user import UserModel
+from .user import User

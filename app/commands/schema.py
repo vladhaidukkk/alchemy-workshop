@@ -1,13 +1,13 @@
 from typer import Context, Typer
 
 from app.common import ExecutionMode
-from app.db.core import ModelBase, metadata, sync_engine
+from app.db.core import Base, metadata, sync_engine
 
 # isort: split
 from app.db.tables import users_table  # noqa
 
 # isort: split
-from app.db.models import OrderModel, UserModel  # noqa
+from app.db.models import User  # noqa
 
 app = Typer()
 
@@ -15,7 +15,7 @@ app = Typer()
 @app.command()
 def drop(ctx: Context):
     if ctx.obj.mode == ExecutionMode.ORM:
-        ModelBase.metadata.drop_all(sync_engine)
+        Base.metadata.drop_all(sync_engine)
     else:
         metadata.drop_all(sync_engine)
 
@@ -23,7 +23,7 @@ def drop(ctx: Context):
 @app.command()
 def create(ctx: Context):
     if ctx.obj.mode == ExecutionMode.ORM:
-        ModelBase.metadata.create_all(sync_engine)
+        Base.metadata.create_all(sync_engine)
     else:
         metadata.create_all(sync_engine)
 
@@ -31,8 +31,8 @@ def create(ctx: Context):
 @app.command()
 def reset(ctx: Context):
     if ctx.obj.mode == ExecutionMode.ORM:
-        ModelBase.metadata.drop_all(sync_engine)
-        ModelBase.metadata.create_all(sync_engine)
+        Base.metadata.drop_all(sync_engine)
+        Base.metadata.create_all(sync_engine)
     else:
         metadata.drop_all(sync_engine)
         metadata.create_all(sync_engine)
