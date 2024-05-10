@@ -12,6 +12,8 @@ users_table = Table(
     Column("username", String, nullable=False, unique=True),
     Column("first_name", String),
     Column("last_name", String),
+    Column("phone_number", String),
+    Column("address", String),
     Column(
         "created_at",
         DateTime(timezone=True),

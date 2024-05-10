@@ -13,4 +13,6 @@ class User(Base):
     username: Mapped[str] = mapped_column(unique=True)
     first_name: Mapped[str | None]
     last_name: Mapped[str | None]
+    phone_number: Mapped[str | None]
+    address: Mapped[str | None]
     created_at: Mapped[created_at]

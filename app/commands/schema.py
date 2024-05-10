@@ -4,10 +4,10 @@ from app.common import ExecutionMode
 from app.db.core import Base, metadata, sync_engine
 
 # isort: split
-from app.db.tables import users_table  # noqa
+from app.db.tables import resumes_table, users_table  # noqa
 
 # isort: split
-from app.db.models import User  # noqa
+from app.db.models import Resume, User  # noqa
 
 app = Typer()
 
