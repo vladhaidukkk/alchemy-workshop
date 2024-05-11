@@ -29,7 +29,7 @@ dev = [
 
 [project.scripts]
 # database manager -> dbm
-dbm = "app.main:main"
+dbm = "app.main:app"
 
 [tool.setuptools]
 packages = ["app", "data"]
