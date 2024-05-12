@@ -5,6 +5,8 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    debug: bool = False
+
     db_host: str
     db_port: int = Field(ge=1, le=65535)
     db_user: str
