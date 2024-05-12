@@ -1,16 +1,15 @@
 import asyncio
-from typing import Annotated
 
 from rich import print
 from sqlalchemy.sql import text
-from typer import Option, Typer
+from typer import Context, Typer
 
 from app.cli.commands import schema_app
-from app.cli.common import inject_common
+from app.cli.common import inject_root_common
 from app.config import settings
 from app.db.core import async_engine, sync_engine
 
-app = Typer(callback=inject_common, pretty_exceptions_show_locals=settings.debug)
+app = Typer(callback=inject_root_common, pretty_exceptions_show_locals=settings.debug)
 
 
 def _get_db_version():
@@ -28,8 +27,8 @@ async def _get_db_version_async():
 
 
 @app.command()
-def version(async_: Annotated[bool, Option("--async", "-a")] = False):
-    ver = asyncio.run(_get_db_version_async()) if async_ else _get_db_version()
+def version(ctx: Context):
+    ver = _get_db_version() if ctx.obj.is_sync else asyncio.run(_get_db_version_async())
     print(ver)
 
 
