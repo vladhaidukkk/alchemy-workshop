@@ -3,21 +3,14 @@ from typing import Annotated
 
 from rich import print
 from sqlalchemy.sql import text
-from typer import Context, Option, Typer
+from typer import Option, Typer
 
-import app.commands.schema as schema
-from app.common import Common, ExecutionMode
+from app.cli.commands import schema_app
+from app.cli.common import inject_common
+from app.config import settings
 from app.db.core import async_engine, sync_engine
 
-app = Typer()
-
-
-@app.callback()
-def common(
-    ctx: Context,
-    mode: Annotated[ExecutionMode, Option("--mode", "-m")] = ExecutionMode.ORM,
-):
-    ctx.obj = Common(mode=mode)
+app = Typer(callback=inject_common, pretty_exceptions_show_locals=settings.debug)
 
 
 def _get_db_version():
@@ -40,7 +33,7 @@ def version(async_: Annotated[bool, Option("--async", "-a")] = False):
     print(ver)
 
 
-app.add_typer(schema.app, name="schema")
+app.add_typer(schema_app, name="schema")
 
 
 if __name__ == "__main__":

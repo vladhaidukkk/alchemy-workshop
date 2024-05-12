@@ -1,6 +1,6 @@
 from typer import Context, Typer
 
-from app.common import ExecutionMode
+from app.cli.common import ExecutionMode
 from app.db.core import Base, metadata, sync_engine
 
 # isort: split
