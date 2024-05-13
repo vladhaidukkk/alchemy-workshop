@@ -11,7 +11,7 @@ dependencies = [
     "asyncpg",
     "greenlet",
     "typer",
-    "pydantic",
+    "pydantic[email]",
     "pydantic-settings",
 ]
 

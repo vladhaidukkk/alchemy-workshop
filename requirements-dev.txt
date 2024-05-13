@@ -12,11 +12,17 @@ click==8.1.7
     # via
     #   black
     #   typer
+dnspython==2.6.1
+    # via email-validator
 docformatter==1.7.5
+email-validator==2.1.1
+    # via pydantic
 flake8==7.0.0
     # via flake8-pyproject
 flake8-pyproject==1.2.3
 greenlet==3.0.3
+idna==3.7
+    # via email-validator
 isort==5.13.2
 markdown-it-py==3.0.0
     # via rich

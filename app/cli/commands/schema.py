@@ -36,7 +36,3 @@ def reset(ctx: Context):
     else:
         Base.metadata.drop_all(sync_engine)
         Base.metadata.create_all(sync_engine)
-
-
-if __name__ == "__main__":
-    app()

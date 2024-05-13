@@ -4,7 +4,7 @@ from rich import print
 from sqlalchemy.sql import text
 from typer import Context, Typer
 
-from app.cli.commands import schema_app
+from app.cli.commands import schema_app, users_app
 from app.cli.common import inject_root_common
 from app.config import settings
 from app.db.core import async_engine, sync_engine
@@ -33,7 +33,4 @@ def version(ctx: Context):
 
 
 app.add_typer(schema_app, name="schema")
-
-
-if __name__ == "__main__":
-    app()
+app.add_typer(users_app, name="users")
