@@ -1,11 +1,11 @@
 import asyncio
 
-from rich import print
 from sqlalchemy.sql import text
 from typer import Context, Typer
 
 from app.cli.commands import schema_app, users_app
 from app.cli.common import inject_root_common
+from app.cli.console import console
 from app.config import settings
 from app.db.core import async_engine, sync_engine
 
@@ -29,7 +29,7 @@ async def _get_db_version_async():
 @app.command()
 def version(ctx: Context):
     ver = _get_db_version() if ctx.obj.is_sync else asyncio.run(_get_db_version_async())
-    print(ver)
+    console.print(ver)
 
 
 app.add_typer(schema_app, name="schema")

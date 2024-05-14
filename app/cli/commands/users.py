@@ -3,11 +3,11 @@ import hashlib
 from typing import Annotated, Optional
 
 from pydantic import EmailStr, TypeAdapter, ValidationError
-from rich import print
 from sqlalchemy.sql import insert
 from typer import BadParameter, Context, Option, Typer
 
 from app.cli.common import inject_sub_common
+from app.cli.console import print_model_as_table
 from app.db.core import async_engine, async_session, sync_engine, sync_session
 from app.db.models import UserModel
 from app.db.tables import users_table
@@ -144,4 +144,4 @@ def list_(ctx: Context):
             users = _get_users_sync_orm()
         else:
             users = asyncio.run(_get_users_async_orm())
-    print(users)
+    print_model_as_table(model=UserOutput, data=users, title="Users")
