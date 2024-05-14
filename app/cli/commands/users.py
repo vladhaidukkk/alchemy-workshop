@@ -4,14 +4,15 @@ from dataclasses import asdict
 from typing import Annotated, Optional
 
 from pydantic import EmailStr, TypeAdapter, ValidationError
-from sqlalchemy.sql import insert
+from rich import print
+from sqlalchemy.sql import insert, select
 from typer import BadParameter, Context, Option, Typer
 
 from app.cli.common import inject_sub_common
 from app.db.core import async_engine, async_session, sync_engine, sync_session
 from app.db.models import User
 from app.db.tables import users_table
-from app.models import UserCreate
+from app.models import UserCreate, UserOutput
 
 app = Typer(callback=inject_sub_common)
 
@@ -104,3 +105,101 @@ def create(
             _create_user_sync_orm(new_user_data)
         else:
             asyncio.run(_create_user_async_orm(new_user_data))
+
+
+def _get_users_sync_core() -> list[UserOutput]:
+    with sync_engine.connect() as conn:
+        query = select(users_table)
+        result = conn.execute(query)
+        users = result.all()
+
+    return [
+        UserOutput(
+            id=user.id,
+            email=user.email,
+            username=user.username,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            phone_number=user.phone_number,
+            address=user.address,
+            created_at=user.created_at,
+        )
+        for user in users
+    ]
+
+
+async def _get_users_async_core() -> list[UserOutput]:
+    async with async_engine.connect() as conn:
+        query = select(users_table)
+        result = await conn.execute(query)
+        users = result.all()
+
+    return [
+        UserOutput(
+            id=user.id,
+            email=user.email,
+            username=user.username,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            phone_number=user.phone_number,
+            address=user.address,
+            created_at=user.created_at,
+        )
+        for user in users
+    ]
+
+
+def _get_users_sync_orm() -> list[UserOutput]:
+    with sync_session() as session:
+        query = session.query(User)
+        users = query.all()
+
+    return [
+        UserOutput(
+            id=user.id,
+            email=user.email,
+            username=user.username,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            phone_number=user.phone_number,
+            address=user.address,
+            created_at=user.created_at,
+        )
+        for user in users
+    ]
+
+
+async def _get_users_async_orm() -> list[UserOutput]:
+    async with async_session() as session:
+        query = select(User)
+        result = await session.execute(query)
+        users = result.scalars().all()
+
+    return [
+        UserOutput(
+            id=user.id,
+            email=user.email,
+            username=user.username,
+            first_name=user.first_name,
+            last_name=user.last_name,
+            phone_number=user.phone_number,
+            address=user.address,
+            created_at=user.created_at,
+        )
+        for user in users
+    ]
+
+
+@app.command("list")
+def list_(ctx: Context):
+    if ctx.obj.is_core:
+        if ctx.obj.is_sync:
+            users = _get_users_sync_core()
+        else:
+            users = asyncio.run(_get_users_async_core())
+    else:
+        if ctx.obj.is_sync:
+            users = _get_users_sync_orm()
+        else:
+            users = asyncio.run(_get_users_async_orm())
+    print(users)

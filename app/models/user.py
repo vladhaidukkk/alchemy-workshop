@@ -1,12 +1,23 @@
 from dataclasses import dataclass
+from datetime import datetime
 
 
 @dataclass
-class UserCreate:
+class UserBase:
     email: str
-    hashed_password: str
     username: str
     first_name: str | None
     last_name: str | None
     phone_number: str | None
     address: str | None
+
+
+@dataclass
+class UserCreate(UserBase):
+    hashed_password: str
+
+
+@dataclass
+class UserOutput(UserBase):
+    id: int
+    created_at: datetime
