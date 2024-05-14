@@ -1,6 +1,5 @@
 import asyncio
 import hashlib
-from dataclasses import asdict
 from typing import Annotated, Optional
 
 from pydantic import EmailStr, TypeAdapter, ValidationError
@@ -35,28 +34,28 @@ def email_validator(value: str) -> str:
 
 def _create_user_sync_core(data: UserCreate):
     with sync_engine.connect() as conn:
-        stmt = insert(users_table).values(**asdict(data))
+        stmt = insert(users_table).values(**data.model_dump())
         conn.execute(stmt)
         conn.commit()
 
 
 async def _create_user_async_core(data: UserCreate):
     async with async_engine.connect() as conn:
-        stmt = insert(users_table).values(**asdict(data))
+        stmt = insert(users_table).values(**data.model_dump())
         await conn.execute(stmt)
         await conn.commit()
 
 
 def _create_user_sync_orm(data: UserCreate):
     with sync_session() as session:
-        user = UserModel(**asdict(data))
+        user = UserModel(**data.model_dump())
         session.add(user)
         session.commit()
 
 
 async def _create_user_async_orm(data: UserCreate):
     async with async_session() as session:
-        user = UserModel(**asdict(data))
+        user = UserModel(**data.model_dump())
         session.add(user)
         await session.commit()
 
@@ -115,70 +114,22 @@ def create(
 
 def _get_users_sync_core() -> list[UserOutput]:
     users = SyncCoreUsersRepository.get_all()
-    return [
-        UserOutput(
-            id=user.id,
-            email=user.email,
-            username=user.username,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            phone_number=user.phone_number,
-            address=user.address,
-            created_at=user.created_at,
-        )
-        for user in users
-    ]
+    return [UserOutput(**user.model_dump()) for user in users]
 
 
 async def _get_users_async_core() -> list[UserOutput]:
     users = await AsyncCoreUsersRepository.get_all()
-    return [
-        UserOutput(
-            id=user.id,
-            email=user.email,
-            username=user.username,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            phone_number=user.phone_number,
-            address=user.address,
-            created_at=user.created_at,
-        )
-        for user in users
-    ]
+    return [UserOutput(**user.model_dump()) for user in users]
 
 
 def _get_users_sync_orm() -> list[UserOutput]:
     users = SyncOrmUsersRepository.get_all()
-    return [
-        UserOutput(
-            id=user.id,
-            email=user.email,
-            username=user.username,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            phone_number=user.phone_number,
-            address=user.address,
-            created_at=user.created_at,
-        )
-        for user in users
-    ]
+    return [UserOutput(**user.model_dump()) for user in users]
 
 
 async def _get_users_async_orm() -> list[UserOutput]:
     users = await AsyncOrmUsersRepository.get_all()
-    return [
-        UserOutput(
-            id=user.id,
-            email=user.email,
-            username=user.username,
-            first_name=user.first_name,
-            last_name=user.last_name,
-            phone_number=user.phone_number,
-            address=user.address,
-            created_at=user.created_at,
-        )
-        for user in users
-    ]
+    return [UserOutput(**user.model_dump()) for user in users]
 
 
 @app.command("list")
