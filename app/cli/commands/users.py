@@ -13,6 +13,7 @@ from app.db.core import async_engine, async_session, sync_engine, sync_session
 from app.db.models import User
 from app.db.tables import users_table
 from app.models import UserCreate, UserOutput
+from app.repos.users import AsyncOrmUsersRepository, SyncOrmUsersRepository
 
 app = Typer(callback=inject_sub_common)
 
@@ -150,10 +151,7 @@ async def _get_users_async_core() -> list[UserOutput]:
 
 
 def _get_users_sync_orm() -> list[UserOutput]:
-    with sync_session() as session:
-        query = session.query(User)
-        users = query.all()
-
+    users = SyncOrmUsersRepository.get_all()
     return [
         UserOutput(
             id=user.id,
@@ -170,11 +168,7 @@ def _get_users_sync_orm() -> list[UserOutput]:
 
 
 async def _get_users_async_orm() -> list[UserOutput]:
-    async with async_session() as session:
-        query = select(User)
-        result = await session.execute(query)
-        users = result.scalars().all()
-
+    users = await AsyncOrmUsersRepository.get_all()
     return [
         UserOutput(
             id=user.id,
