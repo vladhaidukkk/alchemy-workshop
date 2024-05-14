@@ -6,7 +6,7 @@ from app.db.core import Base
 from app.db.types import created_at, intpk, updated_at
 
 
-class Resume(Base):
+class ResumeModel(Base):
     __tablename__ = "resumes"
 
     id: Mapped[intpk]

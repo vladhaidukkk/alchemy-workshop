@@ -5,15 +5,20 @@ from typing import Annotated, Optional
 
 from pydantic import EmailStr, TypeAdapter, ValidationError
 from rich import print
-from sqlalchemy.sql import insert, select
+from sqlalchemy.sql import insert
 from typer import BadParameter, Context, Option, Typer
 
 from app.cli.common import inject_sub_common
 from app.db.core import async_engine, async_session, sync_engine, sync_session
-from app.db.models import User
+from app.db.models import UserModel
 from app.db.tables import users_table
 from app.models import UserCreate, UserOutput
-from app.repos.users import AsyncOrmUsersRepository, SyncOrmUsersRepository
+from app.repos import (
+    AsyncCoreUsersRepository,
+    AsyncOrmUsersRepository,
+    SyncCoreUsersRepository,
+    SyncOrmUsersRepository,
+)
 
 app = Typer(callback=inject_sub_common)
 
@@ -44,14 +49,14 @@ async def _create_user_async_core(data: UserCreate):
 
 def _create_user_sync_orm(data: UserCreate):
     with sync_session() as session:
-        user = User(**asdict(data))
+        user = UserModel(**asdict(data))
         session.add(user)
         session.commit()
 
 
 async def _create_user_async_orm(data: UserCreate):
     async with async_session() as session:
-        user = User(**asdict(data))
+        user = UserModel(**asdict(data))
         session.add(user)
         await session.commit()
 
@@ -109,11 +114,7 @@ def create(
 
 
 def _get_users_sync_core() -> list[UserOutput]:
-    with sync_engine.connect() as conn:
-        query = select(users_table)
-        result = conn.execute(query)
-        users = result.all()
-
+    users = SyncCoreUsersRepository.get_all()
     return [
         UserOutput(
             id=user.id,
@@ -130,11 +131,7 @@ def _get_users_sync_core() -> list[UserOutput]:
 
 
 async def _get_users_async_core() -> list[UserOutput]:
-    async with async_engine.connect() as conn:
-        query = select(users_table)
-        result = await conn.execute(query)
-        users = result.all()
-
+    users = await AsyncCoreUsersRepository.get_all()
     return [
         UserOutput(
             id=user.id,

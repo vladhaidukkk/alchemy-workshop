@@ -13,6 +13,13 @@ class UserBase:
 
 
 @dataclass
+class User(UserBase):
+    id: int
+    hashed_password: str
+    created_at: datetime
+
+
+@dataclass
 class UserCreate(UserBase):
     hashed_password: str
 

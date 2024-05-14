@@ -1,1 +1,6 @@
-from .users import AsyncOrmUsersRepository, SyncOrmUsersRepository
+from .users import (
+    AsyncCoreUsersRepository,
+    AsyncOrmUsersRepository,
+    SyncCoreUsersRepository,
+    SyncOrmUsersRepository,
+)

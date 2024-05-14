@@ -1,18 +1,15 @@
 from abc import ABC, abstractmethod
-from typing import Sequence
-
-from app.db.core import Base
 
 
-class SyncOrmRepo[T: Base](ABC):
+class SyncRepo[T](ABC):
     @staticmethod
     @abstractmethod
-    def get_all() -> Sequence[T]:
+    def get_all() -> list[T]:
         pass
 
 
-class AsyncOrmRepo[T: Base](ABC):
+class AsyncRepo[T](ABC):
     @staticmethod
     @abstractmethod
-    async def get_all() -> Sequence[T]:
+    async def get_all() -> list[T]:
         pass

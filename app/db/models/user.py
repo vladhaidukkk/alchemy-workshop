@@ -4,7 +4,7 @@ from app.db.core import Base
 from app.db.types import created_at, intpk
 
 
-class User(Base):
+class UserModel(Base):
     __tablename__ = "users"
 
     id: Mapped[intpk]

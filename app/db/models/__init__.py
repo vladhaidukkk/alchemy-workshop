@@ -1,2 +1,2 @@
-from .resume import Resume
-from .user import User
+from .resume import ResumeModel
+from .user import UserModel

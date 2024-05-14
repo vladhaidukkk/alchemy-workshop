@@ -7,7 +7,7 @@ from app.db.core import Base, metadata, sync_engine
 from app.db.tables import resumes_table, users_table  # noqa
 
 # isort: split
-from app.db.models import Resume, User  # noqa
+from app.db.models import ResumeModel, UserModel  # noqa
 
 app = Typer(callback=inject_sub_common)
 
