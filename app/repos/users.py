@@ -8,7 +8,7 @@ from app.models import User, UserCreate
 from .repo import AsyncRepo, SyncRepo
 
 
-class SyncCoreUsersRepository(SyncRepo[User]):
+class SyncCoreUsersRepo(SyncRepo[User]):
     @staticmethod
     def get_all() -> list[User]:
         with sync_engine.connect() as conn:
@@ -25,7 +25,7 @@ class SyncCoreUsersRepository(SyncRepo[User]):
             conn.commit()
 
 
-class AsyncCoreUsersRepository(AsyncRepo[User]):
+class AsyncCoreUsersRepo(AsyncRepo[User]):
     @staticmethod
     async def get_all() -> list[User]:
         async with async_engine.connect() as conn:
@@ -42,7 +42,7 @@ class AsyncCoreUsersRepository(AsyncRepo[User]):
             await conn.commit()
 
 
-class SyncOrmUsersRepository(SyncRepo[User]):
+class SyncOrmUsersRepo(SyncRepo[User]):
     @staticmethod
     def get_all() -> list[User]:
         with sync_session() as session:
@@ -59,7 +59,7 @@ class SyncOrmUsersRepository(SyncRepo[User]):
             session.commit()
 
 
-class AsyncOrmUsersRepository(AsyncRepo[User]):
+class AsyncOrmUsersRepo(AsyncRepo[User]):
     @staticmethod
     async def get_all() -> list[User]:
         async with async_session() as session:

@@ -1,4 +1,3 @@
-import asyncio
 import hashlib
 from typing import Annotated, Optional
 
@@ -8,12 +7,7 @@ from typer import BadParameter, Context, Option, Typer
 from app.cli.common import inject_sub_common
 from app.cli.console import print_model_as_table
 from app.models import UserCreate, UserOutput
-from app.repos import (
-    AsyncCoreUsersRepository,
-    AsyncOrmUsersRepository,
-    SyncCoreUsersRepository,
-    SyncOrmUsersRepository,
-)
+from app.repos import UsersRepoFactory
 
 app = Typer(callback=inject_sub_common)
 
@@ -67,49 +61,12 @@ def create(
         phone_number=phone_number,
         address=address,
     )
-
-    if ctx.obj.is_core:
-        if ctx.obj.is_sync:
-            SyncCoreUsersRepository.create(new_user_data)
-        else:
-            asyncio.run(AsyncCoreUsersRepository.create(new_user_data))
-    else:
-        if ctx.obj.is_sync:
-            SyncOrmUsersRepository.create(new_user_data)
-        else:
-            asyncio.run(AsyncOrmUsersRepository.create(new_user_data))
-
-
-def _get_users_sync_core() -> list[UserOutput]:
-    users = SyncCoreUsersRepository.get_all()
-    return [UserOutput(**user.model_dump()) for user in users]
-
-
-async def _get_users_async_core() -> list[UserOutput]:
-    users = await AsyncCoreUsersRepository.get_all()
-    return [UserOutput(**user.model_dump()) for user in users]
-
-
-def _get_users_sync_orm() -> list[UserOutput]:
-    users = SyncOrmUsersRepository.get_all()
-    return [UserOutput(**user.model_dump()) for user in users]
-
-
-async def _get_users_async_orm() -> list[UserOutput]:
-    users = await AsyncOrmUsersRepository.get_all()
-    return [UserOutput(**user.model_dump()) for user in users]
+    users_repo = UsersRepoFactory(ctx.obj.is_sync, ctx.obj.is_core)
+    users_repo.create(new_user_data)
 
 
 @app.command("list")
 def list_(ctx: Context):
-    if ctx.obj.is_core:
-        if ctx.obj.is_sync:
-            users = _get_users_sync_core()
-        else:
-            users = asyncio.run(_get_users_async_core())
-    else:
-        if ctx.obj.is_sync:
-            users = _get_users_sync_orm()
-        else:
-            users = asyncio.run(_get_users_async_orm())
+    users_repo = UsersRepoFactory(ctx.obj.is_sync, ctx.obj.is_core)
+    users = [UserOutput(**user.model_dump()) for user in users_repo.get_all()]
     print_model_as_table(model=UserOutput, data=users, title="Users")
