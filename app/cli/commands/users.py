@@ -3,14 +3,10 @@ import hashlib
 from typing import Annotated, Optional
 
 from pydantic import EmailStr, TypeAdapter, ValidationError
-from sqlalchemy.sql import insert
 from typer import BadParameter, Context, Option, Typer
 
 from app.cli.common import inject_sub_common
 from app.cli.console import print_model_as_table
-from app.db.core import async_engine, async_session, sync_engine, sync_session
-from app.db.models import UserModel
-from app.db.tables import users_table
 from app.models import UserCreate, UserOutput
 from app.repos import (
     AsyncCoreUsersRepository,
@@ -30,34 +26,6 @@ def email_validator(value: str) -> str:
         msg = error.get("ctx", {}).get("reason") or error["msg"]
         raise BadParameter(msg)
     return value
-
-
-def _create_user_sync_core(data: UserCreate):
-    with sync_engine.connect() as conn:
-        stmt = insert(users_table).values(**data.model_dump())
-        conn.execute(stmt)
-        conn.commit()
-
-
-async def _create_user_async_core(data: UserCreate):
-    async with async_engine.connect() as conn:
-        stmt = insert(users_table).values(**data.model_dump())
-        await conn.execute(stmt)
-        await conn.commit()
-
-
-def _create_user_sync_orm(data: UserCreate):
-    with sync_session() as session:
-        user = UserModel(**data.model_dump())
-        session.add(user)
-        session.commit()
-
-
-async def _create_user_async_orm(data: UserCreate):
-    async with async_session() as session:
-        user = UserModel(**data.model_dump())
-        session.add(user)
-        await session.commit()
 
 
 @app.command()
@@ -102,14 +70,14 @@ def create(
 
     if ctx.obj.is_core:
         if ctx.obj.is_sync:
-            _create_user_sync_core(new_user_data)
+            SyncCoreUsersRepository.create(new_user_data)
         else:
-            asyncio.run(_create_user_async_core(new_user_data))
+            asyncio.run(AsyncCoreUsersRepository.create(new_user_data))
     else:
         if ctx.obj.is_sync:
-            _create_user_sync_orm(new_user_data)
+            SyncOrmUsersRepository.create(new_user_data)
         else:
-            asyncio.run(_create_user_async_orm(new_user_data))
+            asyncio.run(AsyncOrmUsersRepository.create(new_user_data))
 
 
 def _get_users_sync_core() -> list[UserOutput]:
