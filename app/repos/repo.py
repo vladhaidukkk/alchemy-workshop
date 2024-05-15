@@ -12,7 +12,7 @@ class SyncRepo[T: BaseModel](ABC):
 
     @staticmethod
     @abstractmethod
-    def create(data: BaseModel) -> None:
+    def create(data) -> None:
         pass
 
 
@@ -24,7 +24,7 @@ class AsyncRepo[T: BaseModel](ABC):
 
     @staticmethod
     @abstractmethod
-    async def create(data: BaseModel) -> None:
+    async def create(data) -> None:
         pass
 
 
@@ -48,5 +48,5 @@ class RepoFactory[T: BaseModel](ABC):
         pass
 
     @abstractmethod
-    def create(self, data: BaseModel) -> None:
+    def create(self, data) -> None:
         pass
