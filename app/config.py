@@ -1,47 +1,61 @@
 from typing import Literal
 
-from pydantic import Field, PostgresDsn, computed_field
+from pydantic import BaseModel, Field, PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+class DatabaseSettings(BaseModel):
+    host: str
+    port: int = Field(ge=1, le=65535)
+    username: str
+    password: str | None = None
+    name: str
+
+    @computed_field
+    @property
+    def sync_url(self) -> str:
+        dsn = PostgresDsn.build(
+            scheme="postgresql+psycopg",
+            username=self.username,
+            password=self.password,
+            host=self.host,
+            port=self.port,
+            path=self.name,
+        )
+        return dsn.unicode_string()
+
+    @computed_field
+    @property
+    def async_url(self) -> str:
+        dsn = PostgresDsn.build(
+            scheme="postgresql+asyncpg",
+            username=self.username,
+            password=self.password,
+            host=self.host,
+            port=self.port,
+            path=self.name,
+        )
+        return dsn.unicode_string()
+
+
+class AlchemySettings(BaseModel):
+    echo: bool | Literal["debug"] = False
+    echo_pool: bool = False
+    pool_size: int = 5
+    max_overflow: int = 10
 
 
 class Settings(BaseSettings):
     debug: bool = False
 
-    db_host: str
-    db_port: int = Field(ge=1, le=65535)
-    db_user: str
-    db_pass: str
-    db_name: str
+    db: DatabaseSettings
+    alchemy: AlchemySettings
 
-    echo: bool | Literal["debug"] = False
-    pool_size: int = 5
-    max_overflow: int = 10
-
-    @computed_field
-    def sync_db_url(self) -> str:
-        dsn = PostgresDsn.build(
-            scheme="postgresql+psycopg",
-            host=self.db_host,
-            port=self.db_port,
-            username=self.db_user,
-            password=self.db_pass,
-            path=self.db_name,
-        )
-        return dsn.unicode_string()
-
-    @computed_field
-    def async_db_url(self) -> str:
-        dsn = PostgresDsn.build(
-            scheme="postgresql+asyncpg",
-            host=self.db_host,
-            port=self.db_port,
-            username=self.db_user,
-            password=self.db_pass,
-            path=self.db_name,
-        )
-        return dsn.unicode_string()
-
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_ignore_empty=True,
+        env_nested_delimiter="__",
+        extra="ignore",
+    )
 
 
-settings = Settings()
+settings = Settings(_env_file=(".env.example", ".env"))

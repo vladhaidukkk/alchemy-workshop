@@ -8,16 +8,18 @@ from sqlalchemy.orm import DeclarativeBase, sessionmaker
 from app.config import settings
 
 sync_engine = create_engine(
-    url=settings.sync_db_url,
-    echo=settings.echo,
-    pool_size=settings.pool_size,
-    max_overflow=settings.max_overflow,
+    url=settings.db.sync_url,
+    echo=settings.alchemy.echo,
+    echo_pool=settings.alchemy.echo_pool,
+    pool_size=settings.alchemy.pool_size,
+    max_overflow=settings.alchemy.max_overflow,
 )
 async_engine = create_async_engine(
-    url=settings.async_db_url,
-    echo=settings.echo,
-    pool_size=settings.pool_size,
-    max_overflow=settings.max_overflow,
+    url=settings.db.async_url,
+    echo=settings.alchemy.echo,
+    echo_pool=settings.alchemy.echo_pool,
+    pool_size=settings.alchemy.pool_size,
+    max_overflow=settings.alchemy.max_overflow,
 )
 
 sync_session = sessionmaker(sync_engine)
