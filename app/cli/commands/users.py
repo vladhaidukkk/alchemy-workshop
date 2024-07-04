@@ -18,7 +18,7 @@ def email_validator(value: str) -> str:
     except ValidationError as err:
         error = err.errors()[0]
         msg = error.get("ctx", {}).get("reason") or error["msg"]
-        raise BadParameter(msg)
+        raise BadParameter(msg) from err
     return value
 
 
@@ -50,7 +50,7 @@ def create(
     address: Annotated[
         Optional[str], Option("--address", "-a", prompt=True, prompt_required=False)
     ] = None,
-):
+) -> None:
     hashed_password = hashlib.sha256(password.encode()).hexdigest()
     new_user_data = UserCreate(
         email=email,
@@ -61,12 +61,12 @@ def create(
         phone_number=phone_number,
         address=address,
     )
-    users_repo = UsersRepoFactory(ctx.obj.is_sync, ctx.obj.is_core)
+    users_repo = UsersRepoFactory(is_sync=ctx.obj.is_sync, is_core=ctx.obj.is_core)
     users_repo.create(new_user_data)
 
 
 @app.command("list")
-def list_(ctx: Context):
-    users_repo = UsersRepoFactory(ctx.obj.is_sync, ctx.obj.is_core)
+def list_(ctx: Context) -> None:
+    users_repo = UsersRepoFactory(is_sync=ctx.obj.is_sync, is_core=ctx.obj.is_core)
     users = [UserOutput(**user.model_dump()) for user in users_repo.get_all()]
     print_model_as_table(model=UserOutput, data=users, title="Users")

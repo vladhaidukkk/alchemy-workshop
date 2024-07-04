@@ -19,7 +19,7 @@ class Settings(BaseSettings):
 
     @computed_field
     def sync_db_url(self) -> str:
-        dsn = PostgresDsn.build(  # type: ignore
+        dsn = PostgresDsn.build(
             scheme="postgresql+psycopg",
             host=self.db_host,
             port=self.db_port,
@@ -31,7 +31,7 @@ class Settings(BaseSettings):
 
     @computed_field
     def async_db_url(self) -> str:
-        dsn = PostgresDsn.build(  # type: ignore
+        dsn = PostgresDsn.build(
             scheme="postgresql+asyncpg",
             host=self.db_host,
             port=self.db_port,
@@ -44,4 +44,4 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
-settings = Settings()  # type: ignore
+settings = Settings()

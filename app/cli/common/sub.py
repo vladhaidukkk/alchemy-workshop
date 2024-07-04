@@ -28,5 +28,5 @@ def inject_sub_common(
     mode: Annotated[
         AlchemyMode, Option("--mode", "-m", case_sensitive=False)
     ] = AlchemyMode.CORE,
-):
+) -> None:
     ctx.obj = SubCommon(**ctx.obj.model_dump(), alchemy_mode=mode)

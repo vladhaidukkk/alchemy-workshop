@@ -24,8 +24,9 @@ class RootCommon(BaseModel):
 
 def inject_root_common(
     ctx: Context,
+    *,
     async_: Annotated[bool, Option("--async", "-a")] = False,
-):
+) -> None:
     ctx.obj = RootCommon(
         processing_mode=ProcessingMode.ASYNC if async_ else ProcessingMode.SYNC,
     )
