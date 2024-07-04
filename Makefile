@@ -12,3 +12,7 @@ fix:
 
 typecheck:
 	pyright app
+
+# Local Development
+docker-up:
+	docker compose -f docker-compose-local.yaml up -d

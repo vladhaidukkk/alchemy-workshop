@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres
+    container_name: alchemy-db
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - postgresql-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - alchemy
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: alchemy-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@local.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin/data
+    ports:
+      - "8888:80"
+    networks:
+      - alchemy
+
+volumes:
+  postgresql-data:
+  pgadmin-data:
+
+networks:
+  alchemy:
+    driver: bridge
