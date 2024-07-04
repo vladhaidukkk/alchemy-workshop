@@ -1,7 +1,7 @@
 # SQLAlchemy Workshop
 
-To use `dbm` CLI locally, just run this command:
+To use the `dbm` CLI locally, simply install the package with `poetry`:
 
 ```shell
-uv pip install -e .
+poetry install
 ```
